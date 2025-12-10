@@ -115,6 +115,18 @@ func taskTwo() {
 	fmt.Println("任务二：结束")
 }
 
+type Shape interface {
+	Area() float64      //面积
+	Perimeter() float64 //周长
+}
+
+type Rectangle struct {
+	Shape
+}
+
+type Circle struct {
+}
+
 func main() {
 	// num := 15
 	// increase(&num)
