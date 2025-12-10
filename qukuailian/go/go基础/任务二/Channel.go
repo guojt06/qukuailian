@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"sync"
+	"time"
 )
 
 // 题目 ：编写一个Go程序，定义一个函数，该函数接收一个整数指针作为参数，在函数内部将该指针指向的值增加10，然后在主函数中调用该函数并输出修改后的值。
@@ -44,10 +46,73 @@ func increase(num *int) {
 	*num += 10
 }
 
+// 题目 ：实现一个函数，接收一个整数切片的指针，将切片中的每个元素乘以2。
+// 考察点 ：指针运算、切片操作。
 func double(num *[]int) {
 	for i := 0; i < len(*num); i++ {
 		(*num)[i] = (*num)[i] * 2
 	}
+}
+
+// 题目 ：编写一个程序，使用 go 关键字启动两个协程，一个协程打印从1到10的奇数，另一个协程打印从2到10的偶数。
+// 考察点 ： go 关键字的使用、协程的并发执行。
+func toNmu() {
+	for i := 0; i < 11; i++ {
+		if i%2 == 0 {
+			fmt.Printf("协程一：%v\n", i)
+		}
+	}
+}
+
+func toNmutwo() {
+	for i := 0; i < 11; i++ {
+		if i%2 == 1 {
+			fmt.Printf("协程二：%v\n", i)
+		}
+	}
+}
+
+// 题目 ：设计一个任务调度器，接收一组任务（可以用函数表示），并使用协程并发执行这些任务，同时统计每个任务的执行时间。
+// 考察点 ：协程原理、并发任务调度。
+// Task 是一个函数类型，表示任务
+type Task func()
+
+// TaskScheduler 是任务调度器
+type TaskScheduler struct {
+	tasks []Task
+}
+
+// AddTask 添加一个任务到调度器
+func (scheduler *TaskScheduler) AddTask(task Task) {
+	scheduler.tasks = append(scheduler.tasks, task)
+}
+
+// Run 并发执行所有任务，并统计每个任务的执行时间
+func (scheduler *TaskScheduler) Run() {
+	var wg sync.WaitGroup
+	for _, task := range scheduler.tasks {
+		wg.Add(1)
+		go func(task Task) {
+			defer wg.Done()
+			start := time.Now()
+			task()
+			duration := time.Since(start)
+			fmt.Printf("任务执行时间: %v\n", duration)
+		}(task)
+	}
+	wg.Wait()
+}
+
+// 示例任务函数
+func taskOne() {
+	fmt.Println("任务一：开始")
+	time.Sleep(2 * time.Second) // 模拟任务需要2秒
+	fmt.Println("任务一：结束")
+}
+func taskTwo() {
+	fmt.Println("任务二：开始")
+	time.Sleep(3 * time.Second) // 模拟任务需要3秒
+	fmt.Println("任务二：结束")
 }
 
 func main() {
@@ -55,8 +120,20 @@ func main() {
 	// increase(&num)
 	// fmt.Printf("修改后的值为：%d\n", num)
 
-	list := []int{1, 2, 3, 4, 54, 35, 5}
-	double(&list)
-	fmt.Printf("修改后的值为：%v\n", list)
+	// list := []int{1, 2, 3, 4, 54, 35, 5}
+	// double(&list)
+	// fmt.Printf("修改后的值为：%v\n", list)
+
+	// go toNmu()
+	// go toNmutwo()
+
+	// time.Sleep(1 * time.Second)
+
+	scheduler := &TaskScheduler{}
+	// 添加任务
+	scheduler.AddTask(taskOne)
+	scheduler.AddTask(taskTwo)
+	// 运行任务
+	scheduler.Run()
 
 }
