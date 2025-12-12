@@ -116,15 +116,29 @@ func taskTwo() {
 }
 
 type Shape interface {
-	Area() float64      //面积
-	Perimeter() float64 //周长
+	Area()
+	Perimeter()
 }
 
 type Rectangle struct {
-	Shape
 }
 
 type Circle struct {
+}
+
+func (r *Rectangle) Area() {
+	fmt.Println("矩形的面积")
+}
+func (r *Rectangle) Perimeter() {
+	fmt.Println("矩形的周长")
+}
+
+func (c *Circle) Area() {
+	fmt.Println("圆的面积")
+}
+
+func (c *Circle) Perimeter() {
+	fmt.Println("圆的周长")
 }
 
 func main() {
@@ -141,11 +155,23 @@ func main() {
 
 	// time.Sleep(1 * time.Second)
 
-	scheduler := &TaskScheduler{}
-	// 添加任务
-	scheduler.AddTask(taskOne)
-	scheduler.AddTask(taskTwo)
-	// 运行任务
-	scheduler.Run()
+	// i := []int{}
+	// i = append(i, 123, 43535)
+	// fmt.Println(i)
+
+	// scheduler := &TaskScheduler{}
+	// // 添加任务
+	// scheduler.AddTask(taskOne)
+	// scheduler.AddTask(taskTwo)
+	// // 运行任务
+	// scheduler.Run()
+
+	shape := &Rectangle{}
+	shape.Area()
+	shape.Perimeter()
+
+	shape1 := &Circle{}
+	shape1.Area()
+	shape1.Perimeter()
 
 }
