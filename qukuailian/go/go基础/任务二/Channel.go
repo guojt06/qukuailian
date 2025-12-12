@@ -115,6 +115,10 @@ func taskTwo() {
 	fmt.Println("任务二：结束")
 }
 
+// // 面向对象
+// 题目 ：定义一个 Shape 接口，包含 Area() 和 Perimeter() 两个方法。然后创建 Rectangle 和 Circle 结构体，
+// 实现 Shape 接口。在主函数中，创建这两个结构体的实例，并调用它们的 Area() 和 Perimeter() 方法。
+// 考察点 ：接口的定义与实现、面向对象编程风格。
 type Shape interface {
 	Area()
 	Perimeter()
@@ -141,6 +145,50 @@ func (c *Circle) Perimeter() {
 	fmt.Println("圆的周长")
 }
 
+//// 题目 ：使用组合的方式创建一个 Person 结构体，包含 Name 和 Age 字段，再创建一个 Employee 结构体，
+//组合 Person 结构体并添加 EmployeeID 字段。为 Employee 结构体实现一个 PrintInfo() 方法，输出员工的信息。
+// 考察点 ：组合的使用、方法接收者。
+
+// Person 结构体
+type Person struct {
+	Name string
+	Age  int
+}
+
+type Employee struct {
+	Person
+	EmployeeID int
+}
+
+func (e *Employee) printInfo() {
+	fmt.Printf("员工姓名：%s，年龄：%d，员工编号：%d\n", e.Name, e.Age, e.EmployeeID)
+}
+
+// 题目 ：编写一个程序，使用通道实现两个协程之间的通信。一个协程生成从1到10的整数，并将这些整数发送到通道中，另一个协程从通道中接收这些整数并打印出来。
+// 考察点 ：通道的基本使用、协程间通信。
+func setchannel(ch chan<- int, wg *sync.WaitGroup) {
+	for i := 0; i < 11; i++ {
+		ch <- i
+		fmt.Printf("生产: %d\n", i)
+	}
+	close(ch) // 关闭通道
+	wg.Done()
+	fmt.Println("生产者: 完成所有发送")
+
+}
+
+func getchannel(chi <-chan int, wg *sync.WaitGroup) {
+	for num := range chi {
+		fmt.Printf("接收: %d\n", num)
+	}
+	wg.Done()
+	fmt.Println("消费者: 消费完成")
+
+}
+
+// 题目 ：实现一个带有缓冲的通道，生产者协程向通道中发送100个整数，消费者协程从通道中接收这些整数并打印。
+// 考察点 ：通道的缓冲机制。
+
 func main() {
 	// num := 15
 	// increase(&num)
@@ -166,12 +214,35 @@ func main() {
 	// // 运行任务
 	// scheduler.Run()
 
-	shape := &Rectangle{}
-	shape.Area()
-	shape.Perimeter()
+	// shape := &Rectangle{}
+	// shape.Area()
+	// shape.Perimeter()
 
-	shape1 := &Circle{}
-	shape1.Area()
-	shape1.Perimeter()
+	// shape1 := &Circle{}
+	// shape1.Area()
+	// shape1.Perimeter()
 
+	// 创建 Employee 实例
+	// emp := Employee{
+	// 	Person: Person{
+	// 		Name: "张三",
+	// 		Age:  30,
+	// 	},
+	// 	EmployeeID: 45645,
+	// }
+
+	// emp.printInfo()
+
+	//创建管道
+	a := make(chan int)
+	//创建计数器
+	var wg sync.WaitGroup
+	wg.Add(2)
+	//启动生产者
+	go setchannel(a, &wg)
+	//启动消费者
+	go getchannel(a, &wg)
+	//等待执行完成
+	wg.Wait()
+	fmt.Println("完成")
 }
