@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql" // 匿名导入，注册MySQL驱动
+	"github.com/jmoiron/sqlx"
 )
 
 // 题目1：基本CRUD操作
@@ -117,6 +118,33 @@ func deleteStudent(age int) {
 	fmt.Println("Delete student success!")
 }
 
+// 题目2：实现类型安全映射
+// 假设有一个 books 表，包含字段 id 、 title 、 author 、 price 。
+// 要求 ：
+// 定义一个 Book 结构体，包含与 books 表对应的字段。
+// 编写Go代码，使用Sqlx执行一个复杂的查询，例如查询价格大于 50 元的书籍，并将结果映射到 Book 结构体切片中，确保类型安全。
+
+type Book struct {
+	Id     int
+	Title  string
+	Author string
+	Price  float64
+}
+
+func queryBook() {
+	db, err := sqlx.Connect("mysql", "root:123456@tcp(localhost:3306)/mydatabase")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	var books []Book
+	err = db.Select(&books, "SELECT id, title, author, price FROM books WHERE price > ?", 70)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(books)
+}
+
 func main() {
 	// insertStudent("张三1", 19, "sdds")
 
@@ -131,5 +159,7 @@ func main() {
 	// queryStudent(18)
 
 	// updateStudent("张三1", "四年级")
-	deleteStudent(19)
+	// deleteStudent(19)
+
+	queryBook()
 }
