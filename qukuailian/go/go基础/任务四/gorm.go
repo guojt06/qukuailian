@@ -98,6 +98,12 @@ func main() {
 	getMostCommentedPost(db)
 }
 
+// 题目3：钩子函数
+// 继续使用博客系统的模型。
+// 要求 ：
+// 为 Post 模型添加一个钩子函数，在文章创建时自动更新用户的文章数量统计字段。
+// 为 Comment 模型添加一个钩子函数，在评论删除时检查文章的评论数量，如果评论数量为 0，则更新文章的评论状态为 "无评论"
+
 // 任务1：查询某个用户发布的所有文章及其对应的评论信息
 func getUserPostsWithComments(db *gorm.DB, userID uint) {
 	var user User
