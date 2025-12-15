@@ -145,6 +145,53 @@ func queryBook() {
 	fmt.Println(books)
 }
 
+// 题目2：事务语句
+// 假设有两个表： accounts 表（包含字段 id 主键， balance 账户余额）和 transactions 表（包含字段 id 主键， from_account_id 转出账户ID， to_account_id 转入账户ID， amount 转账金额）。
+// 要求 ：
+// 编写一个事务，实现从账户 A 向账户 B 转账 100 元的操作。在事务中，需要先检查账户 A 的余额是否足够，如果足够则从账户 A 扣除 100 元，
+// 向账户 B 增加 100 元，并在 transactions 表中记录该笔转账信息。如果余额不足，则回滚事务。
+
+func transfer() {
+	db, err := sqlx.Connect("mysql", "root:123456@tcp(localhost:3306)/mydatabase")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	tx, err := db.Begin()
+	if err != nil {
+		panic(err)
+	}
+	defer tx.Rollback()
+	// 查询账户 A 的余额
+	var balance int
+	err = tx.Get(&balance, "SELECT balance FROM accounts WHERE id = ?", 1)
+	if err != nil {
+		panic(err)
+	}
+	if balance < 100 {
+		fmt.Println("账户余额不足，回滚事务")
+		tx.Rollback()
+		return
+	}
+	// 扣除 100 元
+	_, err = tx.Exec("UPDATE accounts SET balance = balance - ? WHERE id = ?", 100, 1)
+	if err != nil {
+		panic(err)
+	}
+	// 向账户 B 增加 100 元
+	_, err = tx.Exec("UPDATE accounts SET balance = balance + ? WHERE id = ?", 100, 2)
+	if err != nil {
+		panic(err)
+	}
+	// 记录转账信息
+	_, err = tx.Exec("INSERT INTO transactions (from_account_id, to_account_id, amount) VALUES (?, ?, ?)", 1, 2, 100)
+	if err != nil {
+		panic(err)
+	}
+	tx.Commit()
+	fmt.Println("转账成功")
+}
+
 func main() {
 	// insertStudent("张三1", 19, "sdds")
 
