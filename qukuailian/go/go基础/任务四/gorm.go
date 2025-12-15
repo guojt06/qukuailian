@@ -16,6 +16,7 @@ type User struct {
 	Email     string    `gorm:"size:100;unique;not null"` // 邮箱，唯一，非空
 	CreatedAt time.Time `gorm:"autoCreateTime"`           // 创建时间
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`           // 更新时间
+	PostCount uint      `gorm:"default:0"`                // 用户文章数量统计字段
 
 	// 一对多关系：一个用户有多篇文章
 	Posts []Post `gorm:"foreignKey:UserID"` // GORM会自动处理关联
@@ -23,11 +24,12 @@ type User struct {
 
 // Post 模型 - 文章表
 type Post struct {
-	ID        uint      `gorm:"primaryKey;autoIncrement"`
-	Title     string    `gorm:"size:255;not null"`  // 标题，非空
-	Content   string    `gorm:"type:text;not null"` // 内容，非空
-	CreatedAt time.Time `gorm:"autoCreateTime"`     // 创建时间
-	UpdatedAt time.Time `gorm:"autoUpdateTime"`     // 更新时间
+	ID            uint      `gorm:"primaryKey;autoIncrement"`
+	Title         string    `gorm:"size:255;not null"`  // 标题，非空
+	Content       string    `gorm:"type:text;not null"` // 内容，非空
+	CreatedAt     time.Time `gorm:"autoCreateTime"`     // 创建时间
+	UpdatedAt     time.Time `gorm:"autoUpdateTime"`     // 更新时间
+	CommentStatus string    `gorm:"default:'有评论'"`      // 评论状态，默认有评论
 
 	// 外键，关联User表
 	UserID uint `gorm:"not null;index"` // 用户ID，建立索引
@@ -103,6 +105,30 @@ func main() {
 // 要求 ：
 // 为 Post 模型添加一个钩子函数，在文章创建时自动更新用户的文章数量统计字段。
 // 为 Comment 模型添加一个钩子函数，在评论删除时检查文章的评论数量，如果评论数量为 0，则更新文章的评论状态为 "无评论"
+
+// 定义钩子函数
+func (p *Post) BeforeCreate(db *gorm.DB) error {
+	// 文章创建时，更新用户的文章数量统计字段
+	var user User
+	db.First(&user, p.UserID)
+	user.PostCount++
+	db.Save(&user)
+	return nil
+}
+
+// 为 Comment 模型添加一个钩子函数，在评论删除时检查文章的评论数量，如果评论数量为 0，则更新文章的评论状态为 "无评论"
+func (c *Comment) BeforeDelete(db *gorm.DB) error {
+	// 评论删除时，检查文章的评论数量，如果评论数量为 0，则更新文章的评论状态为 "无评论"
+	var post Post
+	db.First(&post, c.PostID)
+	var count int64
+	db.Model(&Comment{}).Where("post_id = ?", post.ID).Count(&count)
+	if count == 0 {
+		post.CommentStatus = "无评论"
+		db.Save(&post)
+	}
+	return nil
+}
 
 // 任务1：查询某个用户发布的所有文章及其对应的评论信息
 func getUserPostsWithComments(db *gorm.DB, userID uint) {
