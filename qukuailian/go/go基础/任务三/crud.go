@@ -46,6 +46,90 @@ func insertStudent(name string, age int, grade string) {
 	fmt.Println("Insert student success!")
 }
 
+// 编写SQL语句查询 students 表中所有年龄大于 18 岁的学生信息。
+func queryStudent(age int) {
+	// 构造SQL语句
+	querySQL := "SELECT * FROM students WHERE age > ?"
+	// 执行SQL语句
+	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/mydatabase")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	rows, err := db.Query(querySQL, age)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	var students []Student
+	for rows.Next() {
+		var student Student
+		err = rows.Scan(&student.id, &student.name, &student.age, &student.grade)
+		if err != nil {
+			panic(err)
+		}
+		students = append(students, student)
+	}
+	fmt.Println(students)
+}
+
+// 编写SQL语句将 students 表中姓名为 "张三" 的学生年级更新为 "四年级"。
+func updateStudent(name string, grade string) {
+	// 构造SQL语句
+	updateSQL := "UPDATE students SET grade = ? WHERE name = ?"
+	// 执行SQL语句
+	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/mydatabase")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	stmt, err := db.Prepare(updateSQL)
+	if err != nil {
+		panic(err)
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(grade, name)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Update student success!")
+}
+
+// 编写SQL语句删除 students 表中年龄小于 15 岁的学生记录。
+func deleteStudent(age int) {
+	// 构造SQL语句
+	deleteSQL := "DELETE FROM students WHERE age < ?"
+	// 执行SQL语句
+	db, err := sql.Open("mysql", "root:123456@tcp(localhost:3306)/mydatabase")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	stmt, err := db.Prepare(deleteSQL)
+	if err != nil {
+		panic(err)
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(age)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Delete student success!")
+}
+
 func main() {
-	insertStudent("张三", 12, "sdds")
+	// insertStudent("张三1", 19, "sdds")
+
+	// insertStudent("李四", 18, "sdds")
+
+	// insertStudent("王五", 98, "sdds")
+
+	// insertStudent("赵柳", 18, "sdds")
+
+	// insertStudent("流星", 31, "sdds")
+
+	// queryStudent(18)
+
+	// updateStudent("张三1", "四年级")
+	deleteStudent(19)
 }
