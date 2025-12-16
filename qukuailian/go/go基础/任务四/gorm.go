@@ -136,7 +136,7 @@ func getUserPostsWithComments(db *gorm.DB, userID uint) {
 
 	// 方法1：使用Preload预加载关联数据
 	err := db.
-		Preload("Posts"). // 预加载用户的所有文章
+		Preload("Posts").          // 预加载用户的所有文章
 		Preload("Posts.Comments"). // 预加载文章的所有评论
 		First(&user, userID).Error
 
