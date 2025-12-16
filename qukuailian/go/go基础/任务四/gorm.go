@@ -29,7 +29,7 @@ type Post struct {
 	Content       string    `gorm:"type:text;not null"` // 内容，非空
 	CreatedAt     time.Time `gorm:"autoCreateTime"`     // 创建时间
 	UpdatedAt     time.Time `gorm:"autoUpdateTime"`     // 更新时间
-	CommentStatus string    `gorm:"default:'有评论'"`   // 评论状态，默认有评论
+	CommentStatus string    `gorm:"default:'有评论'"`      // 评论状态，默认有评论
 
 	// 外键，关联User表
 	UserID uint `gorm:"not null;index"` // 用户ID，建立索引
