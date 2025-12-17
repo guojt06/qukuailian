@@ -6,5 +6,6 @@ import (
 
 func (router RouterGroup) SettingsRouter() {
 	settingsApi := api.ApiGroupApp.SettingsApi
-	router.GET("setttings", settingsApi.SettingsInfoView)
+	router.GET("setttingsInfo", settingsApi.SettingsInfoView)
+	router.POST("setttingsUpda", settingsApi.SettingsUpda)
 }
