@@ -19,7 +19,7 @@ type ArticleModel struct { //文章表
 	DiggCount     int `json:"digg_count" structs:"digg_count"`
 	CollectsCount int `json:"collects_count" structs:"collects_count"`
 
-	UserID       uint   `json:"user_id" structs:"user_id"`
+	UserID       int    `json:"user_id" structs:"user_id"`
 	UserNickName string `json:"user_nick_name" structs:"user_nick_name"`
 	UserAvatar   string `json:"user_avatar" structs:"user_avatar"`
 

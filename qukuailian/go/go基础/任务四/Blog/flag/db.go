@@ -19,7 +19,7 @@ func Makemigrations() {
 			//&models.AdverModel{},
 			&models.UserModel{},
 			&models.CommentModel{},
-			// &models.ArticleModel{},
+			&models.ArticleModel{},
 			&models.UserCollectModel{},
 			&models.MenuModel{},
 			&models.MenuBannerModel{},

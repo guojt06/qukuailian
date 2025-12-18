@@ -6,6 +6,6 @@ import (
 
 func (router RouterGroup) RouterPostApp() {
 	psotApi := api.ApiGroupApp.PostApi
-	router.POST("/users", psotApi.PostInfoView)
+	router.POST("/insert", psotApi.Insert)
 
 }
