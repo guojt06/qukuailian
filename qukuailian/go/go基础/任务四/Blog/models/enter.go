@@ -1,11 +1,9 @@
 package models
 
-import "time"
-
 type MODEL struct {
-	ID        uint      `gorm:"primaryKey" json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"-"`
+	ID uint `gorm:"primaryKey" json:"id"`
+	//CreatedAt time.Time `json:"created_at"` // 改成这个`
+	//UpdatedAt time.Time    `json:"-"`
 }
 
 type RemoveRequest struct {

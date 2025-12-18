@@ -6,4 +6,5 @@ type Config struct {
 	System   System   `yaml:"system"`
 	SiteInfo SiteInfo `yaml:"site_info"`
 	Jwt      Jwt      `yaml:"jwt"`
+	JwtConf  JwtConf  `yaml:"jwtConf"`
 }

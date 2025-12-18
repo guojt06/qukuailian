@@ -7,6 +7,7 @@ import (
 	"modulename/models/res"
 	"modulename/plugins/log_stash"
 	"modulename/utils/jwts"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,6 +28,7 @@ func (UserApi) EmailLoginView(ctx *gin.Context) {
 	log := log_stash.NewLogByGin(ctx)
 
 	var userModel models.UserModel
+
 	err = global.DB.Take(&userModel, "user_name = ? or email = ?", cr.UserName, cr.UserName).Error
 	if err != nil {
 		global.Log.Warn("用户名不存在")
@@ -60,4 +62,27 @@ func (UserApi) EmailLoginView(ctx *gin.Context) {
 	log = log_stash.New(ctx.ClientIP(), token)
 	log.Info("登录成功")
 	res.OKWithData(token, ctx)
+}
+
+func (UserApi) Register(c *gin.Context) {
+	var user models.UserModel
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	// 加密密码
+	//hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	//if err != nil {
+	//	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+	//	return
+	//}
+	//user.Password = string(hashedPassword)
+
+	if err := global.DB.Create(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "User registered successfully"})
+
 }
