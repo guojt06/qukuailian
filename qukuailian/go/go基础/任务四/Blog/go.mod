@@ -3,7 +3,7 @@ module modulename
 go 1.24.4
 
 require (
-	github.com/fatih/structs v1.1.0
+	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
 	github.com/gin-gonic/gin v1.11.0
 	github.com/sirupsen/logrus v1.9.3
 	gopkg.in/yaml.v3 v3.0.1

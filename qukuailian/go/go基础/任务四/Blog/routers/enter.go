@@ -14,6 +14,8 @@ func InitRouters() *gin.Engine {
 
 	apiRouters := routers.Group(`api`)
 	routerGroupApp := RouterGroup{apiRouters}
+
 	routerGroupApp.SettingsRouter()
+	routerGroupApp.UserRouter()
 	return routers
 }

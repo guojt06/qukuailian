@@ -28,6 +28,6 @@ func (SettingsApi) SettingsUpda(c *gin.Context) {
 		res.FailWithMessage(err.Error(), c)
 		return
 	}
-	res.OKWithnil(c)
+	res.OKWithCode(c)
 
 }
