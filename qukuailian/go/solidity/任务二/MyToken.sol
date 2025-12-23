@@ -5,18 +5,27 @@ pragma solidity ^0.8.0;
  * @title 标准 ERC20 代币合约
  * @dev 实现 ERC20 标准，包含增发功能
  */
+//erc20代币合约理解： 就是初始化币种后，有多个地址将币进行分配，其中合约拥有者还可以给某一个地址进行授权额度
+
+//a：transferFrom接口如何使用
+//  这是转账接口 a->b  其中ERC20接口是将币的数据进行变更 a-数量   b+数量
+//  ERC721接口是 a->b 是将token ID的所有者地址进行变更
+
+//b：ERC721中的授权接口跟ERC20有何不同
+//
+
+//c：safeTransfer等带safe前缀的接口提供了什么安全措施
 contract MyToken {
     // 定义代币基本信息
-    string public name;
-    string public symbol;
-    uint8 public decimals;
-    uint256 public totalSupply; // 使用 uint256 以兼容标准
+    string public name; //代币名称
+    string public symbol; //代币符号
+    uint8 public decimals; // 小数位数
+    uint256 public totalSupply; // 代币总数
 
-    address public owner;
-
+    address public owner;  //合约创建者
     // 存储映射
-    mapping(address => uint256) private _balances;
-    mapping(address => mapping(address => uint256)) private _allowances;
+    mapping(address => uint256) private _balances;  //余额映射
+    mapping(address => mapping(address => uint256)) private _allowances;  //授权地址-》映射
 
     // 事件定义
     event Transfer(address indexed from, address indexed to, uint256 value);
