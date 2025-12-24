@@ -11,7 +11,8 @@ pragma solidity ^0.8.0;
 //  这是转账接口 a->b  其中ERC20接口是将币的数据进行变更 a-数量   b+数量
 //  ERC721接口是 a->b 是将token ID的所有者地址进行变更
 
-//b：ERC721中的授权接口跟ERC20有何不同
+//b：ERC721中的授权接口跟ERC20有何不同  approve
+//  erc20接口
 //
 
 //c：safeTransfer等带safe前缀的接口提供了什么安全措施
