@@ -106,14 +106,14 @@ func (scheduler *TaskScheduler) Run() {
 
 // 示例任务函数
 func taskOne() {
-	fmt.Println("任务一：开始")
+	fmt.Println("Task_One：开始")
 	time.Sleep(2 * time.Second) // 模拟任务需要2秒
-	fmt.Println("任务一：结束")
+	fmt.Println("Task_One：结束")
 }
 func taskTwo() {
-	fmt.Println("任务二：开始")
+	fmt.Println("Task_two：开始")
 	time.Sleep(3 * time.Second) // 模拟任务需要3秒
-	fmt.Println("任务二：结束")
+	fmt.Println("Task_two：结束")
 }
 
 // // 面向对象
